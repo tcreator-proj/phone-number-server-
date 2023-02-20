@@ -1,0 +1,5 @@
+export const enum Events {
+	APPEND_NUMBER = 'APPEND_NUMBER',
+	RECEIVE_NEW_PHONE = 'RECEIVE_NEW_PHONE',
+	ERROR = 'ERROR'
+}

@@ -1,11 +1,8 @@
 import {
     Column,
-
     CreateDateColumn,
     Entity,
-
     PrimaryGeneratedColumn,
-
 } from 'typeorm';
 
 @Entity('phone_numbers')
@@ -23,6 +20,8 @@ export class Phone {
     })
     phoneNumber!: string;
 
-    @CreateDateColumn()
-    created_at!: Date;
+    @CreateDateColumn({
+	name: "created_at"
+    })
+    createdAt!: number;
 }
