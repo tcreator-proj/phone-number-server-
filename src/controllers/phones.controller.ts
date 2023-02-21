@@ -20,17 +20,3 @@ export const getAllPhonesHandler = async (
         next(err);
     }
 };
-
-export const createPhoneHandler = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    try {
-        await createPhone(req.body);
-        res
-            .status(201)
-    } catch (err: any) {
-        next(err);
-    }
-};

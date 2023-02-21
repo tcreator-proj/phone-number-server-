@@ -12,35 +12,40 @@ AppDataSource.initialize()
   .then(async () => {
     const app = express();
     app.use(express.json({limit: '10kb'}));
+    app.use(cors({
+      origin: "*",
+      allowedHeaders: "*",
+      credentials: true,
+    }))
     // ROUTES
     app.use(phonesRoute);
-
     const port = config.get<number>('port');
     const server = app.listen(port);
 
     console.log(`Server started with pid: ${process.pid} on port: ${port}`);
 
     const io = new Server(server, {
-        cors: {
-            origin: "*"
-        }
+      cors: {
+        origin: "*"
+      }
     });
+
     io.on("connection", (socket) => {
 
       socket.on("disconnect", () => {
-          console.log("User disconnected");
+        console.log("User disconnected");
       });
 
-      socket.on(Events.APPEND_NUMBER, (data: {phoneNumber: string, countryCode: string}) => {
-          const {phoneNumber, countryCode} = data;
-          createPhone({phoneNumber, countryCode}).then((data) => {
-            io.sockets.emit(Events.RECEIVE_NEW_PHONE, data);
-          }).catch(e => {
-            socket.emit(Events.ERROR, {
-              status: 'error',
-              message: e.message
-            })
+      socket.on(Events.APPEND_NUMBER, (data: { phoneNumber: string, countryCode: string }) => {
+        const {phoneNumber, countryCode} = data;
+        createPhone({phoneNumber, countryCode}).then((data) => {
+          io.sockets.emit(Events.RECEIVE_NEW_PHONE, data);
+        }).catch(e => {
+          socket.emit(Events.ERROR, {
+            status: 'error',
+            message: e.message
           })
+        })
       })
     });
   })
